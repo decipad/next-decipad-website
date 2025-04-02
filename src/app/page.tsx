@@ -15,7 +15,7 @@ export default function Home() {
       <div className="flex-1 flex flex-col items-center justify-center gap-8 max-w-[1100px] w-full mx-auto mb-20">
         <div className="flex flex-col items-center justify-center gap-8 max-w-[800px] mx-auto">
           <Image src="/logo.svg" alt="Decipad" width={60} height={60} />
-          <h1 className="text-5xl font-medium text-center">Skip the spreadsheets.<br/> Ask Decipad.</h1>
+          <h1 className="text-5xl leading-[1.1] font-medium text-center">Skip the spreadsheets.<br/> Ask Decipad.</h1>
           <p className="text-muted-foreground text-lg text-center max-w-[450px] mx-auto">Turn plain language into financial models and reports — no SQL, no expertise needed.</p>
         </div>
         <div className="relative w-full flex flex-col">
