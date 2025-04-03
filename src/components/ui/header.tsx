@@ -10,7 +10,7 @@ export const Header = () => {
                 <Image src="/decipad.svg" alt="Decipad" width={100} height={24} />
             </Link>
             <div className="flex gap-2">
-                <a target="_blank" href="https://decipad.com"><Button variant="ghost">Legacy App</Button></a>
+                <a target="_blank" href="https://www.decipad.com/home"><Button variant="ghost">Legacy App</Button></a>
                 <Waitlist>
                     <Button variant="outline">Get early access</Button>
                 </Waitlist>
