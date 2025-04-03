@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import { Button } from "./button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./dialog"
 import { Spinner } from "./icons/spinner";
@@ -14,7 +15,7 @@ export const Waitlist = (props: {children: React.ReactNode}) => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [emailTouched, setEmailTouched] = useState(false);
     const [requestStatus, setRequestStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-
+    const router = useRouter();
 
     const handleSubmit = async () => {
         setRequestStatus("loading");
@@ -25,7 +26,8 @@ export const Waitlist = (props: {children: React.ReactNode}) => {
         
         if (response.ok) {
             const data = await response.json();
-            setRequestStatus("success");
+            // redirect to success page
+            router.push("/success");
             console.log(data.status, data.message);
         } else {
             console.error('Failed to add to waitlist');
