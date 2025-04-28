@@ -58,7 +58,7 @@ export const Prompt = () => {
         )}
       </div>
       <div className="flex items-center justify-between gap-2">
-        <Button size="sm" variant="secondary"><Image src="/plus.svg" alt="Add" width={16} height={16} /> Add context</Button>
+        <Button size="sm" variant="secondary" disabled><Image src="/plus.svg" alt="Add" width={16} height={16} /> Add context</Button>
         <Waitlist>
           <Button 
             ref={waitlistButtonRef}
