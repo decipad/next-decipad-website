@@ -1,26 +1,56 @@
 import { NextResponse } from 'next/server';
 
-const allowedOrigins = ['https://decipad.webflow.io', 'https://www.decipad.com', 'https://decipad.netlify.app', undefined];
+const allowedOrigins = [
+  'https://decipad.webflow.io',
+  'https://www.decipad.com',
+  'https://decipad.netlify.app',
+];
+
+function corsHeaders(origin: string) {
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
+
+export async function OPTIONS(request: Request) {
+  const origin = request.headers.get('origin') || '';
+  if (!allowedOrigins.includes(origin)) {
+    return new NextResponse('CORS Error: Origin not allowed', { status: 403 });
+  }
+
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders(origin),
+  });
+}
 
 export async function POST(request: Request) {
   const origin = request.headers.get('origin') || '';
 
   if (!allowedOrigins.includes(origin)) {
-    return new NextResponse('CORS Error: Origin not allowed', {
-      status: 403,
-    });
+    return new NextResponse('CORS Error: Origin not allowed', { status: 403 });
   }
 
   try {
     const { email } = await request.json();
+
+    if (!email || typeof email !== 'string') {
+      return new NextResponse(
+        JSON.stringify({ status: 400, message: 'Invalid email' }),
+        { status: 400, headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' } }
+      );
+    }
+
     const derivedName = email.split('@')[0] || 'Anonymous';
 
     // Check if email already exists
     const emailExists = await checkEmailExists(email);
     if (emailExists) {
-      return NextResponse.json(
-        { status: 200, message: 'Email already in waitlist' },
-        { headers: corsHeaders(origin) }
+      return new NextResponse(
+        JSON.stringify({ status: 200, message: 'Email already in waitlist' }),
+        { status: 200, headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' } }
       );
     }
 
@@ -44,40 +74,17 @@ export async function POST(request: Request) {
       throw new Error('Failed to add to waitlist');
     }
 
-    return NextResponse.json(
-      { status: 200, message: 'Email added to waitlist' },
-      { headers: corsHeaders(origin) }
+    return new NextResponse(
+      JSON.stringify({ status: 200, message: 'Email added to waitlist' }),
+      { status: 200, headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Failed to add to waitlist', error);
-    return NextResponse.json(
-      { status: 500, message: 'Failed to add to waitlist' },
-      { headers: corsHeaders(origin) }
+    return new NextResponse(
+      JSON.stringify({ status: 500, message: 'Failed to add to waitlist' }),
+      { status: 500, headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' } }
     );
   }
-}
-
-function corsHeaders(origin: string) {
-  return {
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-}
-
-// Handle preflight requests
-export async function OPTIONS(request: Request) {
-  const origin = request.headers.get('origin') || '';
-  if (!allowedOrigins.includes(origin)) {
-    return new NextResponse('CORS Error: Origin not allowed', {
-      status: 403,
-    });
-  }
-
-  return new NextResponse(null, {
-    status: 204,
-    headers: corsHeaders(origin),
-  });
 }
 
 // Utility
