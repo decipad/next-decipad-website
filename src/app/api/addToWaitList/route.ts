@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const allowedOrigins = ['https://decipad.webflow.io', 'https://www.decipad.com', undefined];
+const allowedOrigins = ['https://decipad.webflow.io', 'https://www.decipad.com', 'https://decipad.netlify.app', undefined];
 
 export async function POST(request: Request) {
   const origin = request.headers.get('origin') || '';
